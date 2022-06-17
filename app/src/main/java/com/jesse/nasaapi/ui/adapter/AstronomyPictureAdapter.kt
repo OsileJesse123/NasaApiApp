@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.jesse.nasaapi.data.database.AstronomyPicture
+import com.jesse.nasaapi.data.database.model.AstronomyPicture
 import com.jesse.nasaapi.databinding.AstronomyPictureItemLayoutBinding
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject

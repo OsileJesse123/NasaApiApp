@@ -1,8 +1,7 @@
-package com.jesse.nasaapi.ui
+package com.jesse.nasaapi.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,8 +9,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jesse.nasaapi.R
 import com.jesse.nasaapi.databinding.ActivityMainBinding
+import com.jesse.nasaapi.ui.AstronomyPictureAdapter
+import com.jesse.nasaapi.ui.DataFetchingState
+import com.jesse.nasaapi.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

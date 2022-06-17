@@ -6,7 +6,7 @@
     <data>
         <variable
             name="astronomyPicture"
-            type="com.jesse.nasaapi.data.database.AstronomyPicture" />
+            type="com.jesse.nasaapi.data.database.model.AstronomyPicture" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/astronomy_card"

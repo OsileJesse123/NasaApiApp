@@ -1,4 +1,4 @@
-package com.jesse.nasaapi.data.database
+package com.jesse.nasaapi.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

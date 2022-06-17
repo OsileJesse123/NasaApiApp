@@ -1,10 +1,9 @@
 package com.jesse.nasaapi.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jesse.nasaapi.data.database.AstronomyPicture
-import com.jesse.nasaapi.repository.AstronomyPictureRepository
+import com.jesse.nasaapi.data.database.model.AstronomyPicture
+import com.jesse.nasaapi.data.repository.AstronomyPictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

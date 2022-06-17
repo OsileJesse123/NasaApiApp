@@ -1,7 +1,7 @@
 package com.jesse.nasaapi.di
 
-import com.jesse.nasaapi.repository.AstronomyPictureRepository
-import com.jesse.nasaapi.repository.AstronomyPictureRepositoryImpl
+import com.jesse.nasaapi.data.repository.AstronomyPictureRepository
+import com.jesse.nasaapi.data.repository.AstronomyPictureRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

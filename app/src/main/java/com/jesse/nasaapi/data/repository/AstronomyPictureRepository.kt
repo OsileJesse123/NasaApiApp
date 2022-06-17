@@ -1,8 +1,7 @@
-package com.jesse.nasaapi.repository
+package com.jesse.nasaapi.data.repository
 
-import com.jesse.nasaapi.data.database.AstronomyPicture
+import com.jesse.nasaapi.data.database.model.AstronomyPicture
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 interface AstronomyPictureRepository {
 
