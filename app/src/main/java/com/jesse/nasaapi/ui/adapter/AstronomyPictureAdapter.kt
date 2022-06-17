@@ -5,20 +5,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.jesse.nasaapi.data.database.model.AstronomyPicture
 import com.jesse.nasaapi.databinding.AstronomyPictureItemLayoutBinding
+import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 @ActivityScoped
 class AstronomyPictureAdapter @Inject constructor():
-    ListAdapter<AstronomyPicture, AstronomyPictureAdapter.AstronomyPictureViewHolder>(
+    ListAdapter<AstronomyPictureFormattedUseCase, AstronomyPictureAdapter.AstronomyPictureViewHolder>(
         AstronomyPictureDiffCallback()) {
 
     inner class AstronomyPictureViewHolder(private val binding: AstronomyPictureItemLayoutBinding):
         RecyclerView.ViewHolder(binding.root){
 
-        fun bindData(astronomyPicture: AstronomyPicture) {
+        fun bindData(astronomyPicture: AstronomyPictureFormattedUseCase) {
             binding.astronomyPicture = astronomyPicture
             binding.executePendingBindings()
         }
@@ -36,13 +36,13 @@ class AstronomyPictureAdapter @Inject constructor():
     }
 }
 
-class AstronomyPictureDiffCallback(): DiffUtil.ItemCallback<AstronomyPicture>(){
+class AstronomyPictureDiffCallback : DiffUtil.ItemCallback<AstronomyPictureFormattedUseCase>(){
 
-    override fun areItemsTheSame(oldItem: AstronomyPicture, newItem: AstronomyPicture): Boolean {
-        return oldItem.url == oldItem.url
+    override fun areItemsTheSame(oldItem: AstronomyPictureFormattedUseCase, newItem: AstronomyPictureFormattedUseCase): Boolean {
+        return oldItem.hdUrl == oldItem.hdUrl
     }
 
-    override fun areContentsTheSame(oldItem: AstronomyPicture, newItem: AstronomyPicture): Boolean {
+    override fun areContentsTheSame(oldItem: AstronomyPictureFormattedUseCase, newItem: AstronomyPictureFormattedUseCase): Boolean {
         return oldItem == newItem
     }
 

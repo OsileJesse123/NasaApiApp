@@ -1,10 +1,10 @@
 package com.jesse.nasaapi.data.repository
 
-import com.jesse.nasaapi.data.database.model.AstronomyPicture
+import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
 import kotlinx.coroutines.flow.Flow
 
 interface AstronomyPictureRepository {
 
-    suspend fun getAstronomyPictures(): Flow<List<AstronomyPicture>>
+    fun getAstronomyPictures(): Flow<List<AstronomyPictureFormattedUseCase>>
     suspend fun refreshAstronomyPictures()
 }

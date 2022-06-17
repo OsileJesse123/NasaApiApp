@@ -1,10 +1,10 @@
 package com.jesse.nasaapi.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,45 +30,42 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.dataFetchingState.collect{
-                    state ->
-                    when(state){
-                        is DataFetchingState.LOADING -> {
-                            binding.spinner.visibility = View.VISIBLE
+                lifecycleScope.launch {
+                    viewModel.triggerRefreshAstronomyPictures.collect {
+                        if(it)
+                            viewModel.refreshAstronomyPictures()
+                    }
+                }
+
+                launch {
+                    viewModel.dataFetchingState.collect{
+                            state ->
+                        when(state){
+                            is DataFetchingState.LOADING -> {
+                                binding.spinner.visibility = View.VISIBLE
+                            }
+                            is DataFetchingState.SUCCESSFUL -> {
+                                binding.spinner.visibility =View.GONE
+                            }
+                            is DataFetchingState.FAILED -> {
+                                binding.spinner.visibility = View.GONE
+                                createToast(state.errorMessage)
+                            }
                         }
-                        is DataFetchingState.SUCCESSFUL -> {
-                            binding.spinner.visibility =View.GONE
-                        }
-                        is DataFetchingState.FAILED -> {
-                            binding.spinner.visibility = View.GONE
-                            createToast(state.errorMessage)
-                        }
+                    }
+                }
+
+                launch {
+                    viewModel.astronomyPicturesFlow.collect {
+                        astronomyAdapter.submitList(it)
                     }
                 }
             }
         }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.astronomyPicturesFlow.collect {
-                    astronomyAdapter.submitList(it)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.setAstronomyPicturesTriggerFlow.collect{
-                    if(it) {
-                        viewModel.setAstronomyPictures()
-                    }
-                }
-            }
-        }
-
-        viewModel.refreshAstronomyPictures()
         setupRecyclerView()
     }
 

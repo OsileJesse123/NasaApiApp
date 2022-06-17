@@ -1,14 +1,13 @@
 package com.jesse.nasaapi.data.repository
 
-import com.jesse.nasaapi.data.database.model.AstronomyPicture
 import com.jesse.nasaapi.data.database.AstronomyPictureDao
 import com.jesse.nasaapi.data.network.AstronomyPictureService
-import com.jesse.nasaapi.di.DefaultDispatcher
 import com.jesse.nasaapi.di.IoDispatcher
-import com.jesse.nasaapi.formatText
+import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
+import com.jesse.nasaapi.domain.AstronomyPictureWithUrlAndImageUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -16,24 +15,14 @@ class AstronomyPictureRepositoryImpl @Inject
 constructor(private val astronomyPictureService: AstronomyPictureService,
 @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
             private val astronomyPictureDao: AstronomyPictureDao,
-            @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
+            private val astronomyPictureUseCase: AstronomyPictureWithUrlAndImageUseCase
 ):
     AstronomyPictureRepository {
 
     private val API_KEY = "DEMO_KEY"
 
-
-
-    override suspend fun getAstronomyPictures(): Flow<List<AstronomyPicture>> {
-        return coroutineScope {
-                astronomyPictureDao.getAllAstronomyPictures().map { list ->
-                    list.forEach {
-                        it.title = formatText(it.title)
-                    }
-                    return@map list
-                }.flowOn(defaultDispatcher)
-        }
-    }
+    override fun getAstronomyPictures(): Flow<List<AstronomyPictureFormattedUseCase>> =
+         astronomyPictureUseCase(astronomyPictureDao.getAllAstronomyPictures())
 
     override suspend fun refreshAstronomyPictures() {
         coroutineScope {

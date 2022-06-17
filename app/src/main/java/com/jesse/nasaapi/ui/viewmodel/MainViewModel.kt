@@ -2,8 +2,8 @@ package com.jesse.nasaapi.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jesse.nasaapi.data.database.model.AstronomyPicture
 import com.jesse.nasaapi.data.repository.AstronomyPictureRepository
+import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -12,29 +12,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject
-constructor(private val astronomyPictureRepository: AstronomyPictureRepository): ViewModel() {
+constructor(private val astronomyPictureRepository: AstronomyPictureRepository,
+            ): ViewModel() {
 
-    private val _astronomyPicturesFlow = MutableStateFlow(listOf<AstronomyPicture>())
+    private val _astronomyPicturesFlow = MutableStateFlow(listOf<AstronomyPictureFormattedUseCase>())
     val astronomyPicturesFlow get() = _astronomyPicturesFlow.asStateFlow()
 
     private val _dataFetchingState: MutableStateFlow<DataFetchingState> =
         MutableStateFlow(DataFetchingState.LOADING)
     val dataFetchingState get() = _dataFetchingState
 
-    val setAstronomyPicturesTriggerFlow = flow {
+    val triggerRefreshAstronomyPictures = flow {
         emit(true)
     }
-    fun setAstronomyPictures(){
-        _dataFetchingState.value = DataFetchingState.LOADING
+
+
+    private fun setAstronomyPictures(){
         viewModelScope.launch {
-            try {
                 _astronomyPicturesFlow.value = astronomyPictureRepository
                     .getAstronomyPictures().stateIn(this).value
-                        _dataFetchingState.value = DataFetchingState.SUCCESSFUL
-                        } catch (e: Exception){
-                _dataFetchingState.value =
-                    DataFetchingState.FAILED(e.message ?: "Unknown Error")
-            }
         }
     }
 
@@ -42,12 +38,18 @@ constructor(private val astronomyPictureRepository: AstronomyPictureRepository):
         _dataFetchingState.value = DataFetchingState.LOADING
         viewModelScope.launch {
             try {
+
                astronomyPictureRepository.refreshAstronomyPictures()
                 _dataFetchingState.value = DataFetchingState.SUCCESSFUL
+                setAstronomyPictures()
+
             } catch (e: Exception){
+
                 e.printStackTrace()
                 _dataFetchingState.value =
                     DataFetchingState.FAILED(e.message ?: "Unknown Error")
+                setAstronomyPictures()
+
             }
         }
     }
