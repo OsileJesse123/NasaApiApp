@@ -1,13 +1,16 @@
-package com.jesse.nasaapi.ui
+package com.jesse.nasaapi.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jesse.nasaapi.data.repository.AstronomyPictureRepository
 import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,14 +21,11 @@ constructor(private val astronomyPictureRepository: AstronomyPictureRepository,
     private val _astronomyPicturesFlow = MutableStateFlow(listOf<AstronomyPictureFormattedUseCase>())
     val astronomyPicturesFlow get() = _astronomyPicturesFlow.asStateFlow()
 
-    private val _dataFetchingState: MutableStateFlow<DataFetchingState> =
-        MutableStateFlow(DataFetchingState.LOADING)
-    val dataFetchingState get() = _dataFetchingState
+    private val _triggerRefreshAstronomyPictures = Channel<DataFetchingState>(Channel.CONFLATED)
+    val triggerRefreshAstronomyPictures = _triggerRefreshAstronomyPictures.receiveAsFlow()
 
-    val triggerRefreshAstronomyPictures = flow {
-        emit(true)
-    }
 
+    fun triggerRefresh() = viewModelScope.launch {refreshAstronomyPictures() }
 
     private fun setAstronomyPictures(){
         viewModelScope.launch {
@@ -34,22 +34,23 @@ constructor(private val astronomyPictureRepository: AstronomyPictureRepository,
         }
     }
 
-    fun refreshAstronomyPictures(){
-        _dataFetchingState.value = DataFetchingState.LOADING
+    private fun refreshAstronomyPictures(){
         viewModelScope.launch {
+            if (!_triggerRefreshAstronomyPictures.isClosedForSend)
+                _triggerRefreshAstronomyPictures.send(DataFetchingState.LOADING)
             try {
-
-               astronomyPictureRepository.refreshAstronomyPictures()
-                _dataFetchingState.value = DataFetchingState.SUCCESSFUL
-                setAstronomyPictures()
-
+                if (!_triggerRefreshAstronomyPictures.isClosedForSend){
+                    astronomyPictureRepository.refreshAstronomyPictures()
+                    _triggerRefreshAstronomyPictures.send(DataFetchingState.SUCCESSFUL)
+                    setAstronomyPictures()
+                }
             } catch (e: Exception){
-
-                e.printStackTrace()
-                _dataFetchingState.value =
-                    DataFetchingState.FAILED(e.message ?: "Unknown Error")
-                setAstronomyPictures()
-
+                if(!_triggerRefreshAstronomyPictures.isClosedForSend){
+                    setAstronomyPictures()
+                    _triggerRefreshAstronomyPictures.send(DataFetchingState.FAILED(e.message ?: "Unknown Error"))
+                }
+            } finally {
+                _triggerRefreshAstronomyPictures.close()
             }
         }
     }

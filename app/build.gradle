@@ -43,7 +43,7 @@ dependencies {
     def roomVersion = "2.4.2"
     def version_retrofit = "2.9.0"
     def version_moshi = "1.8.0"
-    def version_glide = "4.8.0"
+    def version_glide = "4.13.0"
     def coroutine_version = '1.4.3'
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -76,4 +76,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
     implementation"androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+
+    implementation "com.makeramen:roundedimageview:2.3.0"
+    implementation "com.squareup.picasso:picasso:2.5.2"
 }

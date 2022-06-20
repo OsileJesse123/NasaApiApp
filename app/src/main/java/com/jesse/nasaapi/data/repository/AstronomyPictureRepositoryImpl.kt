@@ -27,7 +27,7 @@ constructor(private val astronomyPictureService: AstronomyPictureService,
     override suspend fun refreshAstronomyPictures() {
         coroutineScope {
             val astronomyPictures = withContext(ioDispatcher){
-                astronomyPictureService.getAstronomyPictures(API_KEY, 30)
+                astronomyPictureService.getAstronomyPictures(API_KEY, 5)
             }
 
             withContext(ioDispatcher){
