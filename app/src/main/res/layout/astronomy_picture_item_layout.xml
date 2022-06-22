@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="astronomyPicture"
-            type="com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase" />
+            name="astronomyPictureFormatted"
+            type="com.jesse.nasaapi.data.model.AstronomyPictureFormattedUseCase" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/astronomy_card"
@@ -29,7 +29,7 @@
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 tool:src="@drawable/cat_photo_1"
-                imgUrl="@{astronomyPicture.hdUrl}"
+                imgUrl="@{astronomyPictureFormatted.hdUrl}"
                 app:layout_constraintVertical_bias=".1"
                 app:layout_constraintWidth_percent=".9"
                 app:layout_constraintHeight_percent=".6"
@@ -45,7 +45,7 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                titleText="@{astronomyPicture.title}"
+                titleText="@{astronomyPictureFormatted.title}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

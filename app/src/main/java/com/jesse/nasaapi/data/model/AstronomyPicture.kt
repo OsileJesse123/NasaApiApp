@@ -1,10 +1,7 @@
 package com.jesse.nasaapi.data.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
-@Entity(tableName = "astronomy_table")
 data class AstronomyPicture(
     val date: String,
     val explanation: String,
@@ -15,6 +12,5 @@ data class AstronomyPicture(
     @Json(name = "service_version")
     val serviceVersion: String,
     var title: String,
-    @PrimaryKey
     val url: String
 )

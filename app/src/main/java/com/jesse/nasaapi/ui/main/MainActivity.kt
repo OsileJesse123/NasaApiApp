@@ -1,17 +1,17 @@
 package com.jesse.nasaapi.ui.main
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jesse.nasaapi.databinding.ActivityMainBinding
+import com.jesse.nasaapi.domain.Resource
 import com.jesse.nasaapi.ui.AstronomyPictureAdapter
-import com.jesse.nasaapi.ui.viewmodel.DataFetchingState
 import com.jesse.nasaapi.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -34,33 +34,20 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            viewModel.triggerRefreshAstronomyPictures.collect{
-                    state ->
-                when(state){
-                    is DataFetchingState.LOADING -> {
-                        binding.spinner.visibility = View.VISIBLE
-                    }
-                    is DataFetchingState.SUCCESSFUL -> {
-                        binding.spinner.visibility =View.GONE
-                    }
-                    is DataFetchingState.FAILED -> {
-                        binding.spinner.visibility = View.GONE
-                        createToast(state.errorMessage)
-                    }
-                }
-            }
-
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
                 launch {
-                    viewModel.astronomyPicturesFlow.collect {
-                        astronomyAdapter.submitList(it)
+                    viewModel.getAstronomyPictures().collect {
+                            result ->
+                        astronomyAdapter.submitList(result.data)
+
+                        binding.spinner.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+                        if(result is Resource.Failed)
+                            result.error?.message?.let { createToast(it) }
                     }
                 }
             }
         }
-
-        viewModel.triggerRefresh()
         setupRecyclerView()
     }
 

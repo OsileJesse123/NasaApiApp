@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jesse.nasaapi.databinding.AstronomyPictureItemLayoutBinding
-import com.jesse.nasaapi.domain.AstronomyPictureFormattedUseCase
+import com.jesse.nasaapi.data.model.AstronomyPictureFormattedUseCase
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class AstronomyPictureAdapter @Inject constructor():
         RecyclerView.ViewHolder(binding.root){
 
         fun bindData(astronomyPicture: AstronomyPictureFormattedUseCase) {
-            binding.astronomyPicture = astronomyPicture
+            binding.astronomyPictureFormatted = astronomyPicture
             binding.executePendingBindings()
         }
     }
