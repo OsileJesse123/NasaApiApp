@@ -2,6 +2,9 @@ package com.jesse.nasaapi.data.model
 
 import com.squareup.moshi.Json
 
+/**
+ * This is the Model class of the object we are fetching from the server.
+ * */
 data class AstronomyPicture(
     val date: String,
     val explanation: String,

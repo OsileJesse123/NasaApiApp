@@ -12,9 +12,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AstronomyPictureDao {
 
+    /**This function inserts a list of AstronomyPictureFormattedUseCase into the database.
+    * The conflict strategy here replaces old data with the same primary key with a new one.
+    *  */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(astronomyPictures: List<AstronomyPictureFormattedUseCase>)
 
+    /***
+     * This fetches a flow of a list of AstronomyPictureFormattedUseCase from the database
+     */
     @Query("select * from astronomy_picture_formatted")
     fun getAllAstronomyPictures(): Flow<List<AstronomyPictureFormattedUseCase>>
 }

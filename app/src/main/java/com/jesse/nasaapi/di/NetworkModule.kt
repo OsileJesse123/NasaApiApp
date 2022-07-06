@@ -11,6 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+/**
+ *  This acts as a container for the necessary dependencies related to the API
+ * */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

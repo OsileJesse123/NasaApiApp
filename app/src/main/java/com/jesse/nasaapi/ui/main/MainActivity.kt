@@ -36,20 +36,24 @@ class MainActivity : AppCompatActivity() {
 
             repeatOnLifecycle(Lifecycle.State.STARTED){
 
-                launch {
-                    viewModel.getAstronomyPictures().collect {
-                            result ->
-                        astronomyAdapter.submitList(result.data)
+                viewModel.getAstronomyPictures().collect {
+                        result ->
+                    astronomyAdapter.submitList(result.data)
 
-                        binding.spinner.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-                        if(result is Resource.Failed)
-                            result.error?.message?.let { createToast(it) }
-                    }
+                    binding.spinner.isVisible =
+                        // If data is still being fetched and there is no data in the local storage
+                        // to show to the user display the progress bar.
+                        result is Resource.Loading && result.data.isNullOrEmpty()
+                    // If fetching the data from the API fails show a toast with the appropriate
+                    // error message.
+                    if(result is Resource.Failed)
+                        result.error?.message?.let { createToast(it) }
                 }
             }
         }
         setupRecyclerView()
     }
+
 
     private fun setupRecyclerView(){
         binding.astronomyRecycler.apply {
